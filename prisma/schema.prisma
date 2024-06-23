@@ -87,7 +87,7 @@ model Artist {
   artist_followers  Int?
   artist_images     String[]
   artist_genres     String[]
-  artist_saved_id   String
+  artist_saved_id   String?
 }
 
 model Album {
@@ -98,6 +98,7 @@ model Album {
   album_images       String[]
   album_tracks_id    String[]
   album_artists_id   String[]
+  album_saved_id     String?
 }
 
 model Track {
@@ -106,6 +107,29 @@ model Track {
   track_duration_ms Int?
   track_popularity  Int?
   track_file        String?
-  track_albums_id   String
+  track_albums_id   String?
   track_artists_id  String[]
+  track_saved_id    String?
+}
+
+model Playlist {
+  playlist_id String @id @default(uuid())
+  playlist_name String
+  playlist_description String?
+  playlist_images String[]
+  playlist_tracks_id String[]
+  playlist_albums_id String
+  playlist_artists_id String[]
+}
+
+model Category {
+  category_id               String   @id @default(uuid())
+  category_name             String
+  category_type             String
+  category_artists_id       String[]
+  category_albums_id        String[]
+  category_tracks_id        String[]
+  category_artists_saved_id String[]
+  category_albums_saved_id  String[]
+  category_tracks_saved_id  String[]
 }

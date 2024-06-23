@@ -102,7 +102,7 @@ function CardAlbum({ album }: { album: Album }) {
     return (
         <div className="flex border-separate flex-col px-2 pb-2 justify-between rounded-lg border shadow-sm shadow-black/[0.1] dark:shadow-white/[0.1]">
             <div className="flex flex-col items-center gap-2 p-4">
-                <span>{album.album_name}</span>
+                <span className="max-w-[200px] line-clamp-2">{album.album_name}</span>
                 <Image
                     src={album.album_images && album?.album_images[0]}
                     width={100}

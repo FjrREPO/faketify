@@ -12,7 +12,8 @@ export async function POST(
         track_duration_ms,
         track_file,
         track_albums_id,
-        track_artists_id
+        track_artists_id,
+        track_saved_id
     } = body
 
     try {
@@ -23,7 +24,8 @@ export async function POST(
                 track_duration_ms,
                 track_file,
                 track_albums_id,
-                track_artists_id
+                track_artists_id,
+                track_saved_id
             },
         });
         return NextResponse.json(track);

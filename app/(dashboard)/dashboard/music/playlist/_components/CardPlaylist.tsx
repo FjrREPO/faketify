@@ -1,27 +1,50 @@
-'use client';
+"use client";
 
+import { Button } from "@/components/ui/button";
+import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
+import { Images, Pencil, Plus, Trash } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
 import SkeletonWrapper from "@/components/loader/skeleton-wrapper";
 import { Album, Artist, Category, Track } from "@prisma/client";
-import React, { useState } from "react";
-import { Label } from "@/components/ui/label";
-import { FaPlayCircle } from 'react-icons/fa'
-import { motion } from "framer-motion";
+import Image from "next/image";
+import DeleteCategoryDialog from "./DeletePlaylistDialog";
+import CreateCategoryDialog from "./CreatePlaylistDialog";
+import React from "react";
+import EditCategoryDialog from "./EditPlaylist";
 
-export const Homepage = () => {
+export function CardPlaylist() {
     const { data: categories, isLoading } = useQuery<Category[]>({
         queryKey: ["category"],
         queryFn: () => fetch(`/api/category`).then(res => res.json()),
     });
 
     return (
-        <div className="flex flex-col relative gap-2 pt-5 px-5">
-            {categories && categories.length > 0 &&
-                categories.map((category: Category) => (
-                    <CategoryList key={category.category_id} category={category} />
-                ))
-            }
-        </div>
+        <>
+            <div className="border-b bg-card flex flex-row flex-wrap w-full justify-between">
+                <div className="container flex flex-wrap items-center justify-between md:flex-nowrap gap-6 py-8">
+                    <div className="space-y-2">
+                        <h2 className="text-3xl font-bold">Manage Category</h2>
+                        <p>Manage your category data such as create and delete category.</p>
+                    </div>
+                    <CreateCategoryDialog
+                        trigger={
+                            <Button className="gap-2 text-sm flex flex-row items-center">
+                                <Plus className="h-6 w-6" />
+                                <span>Add Category</span>
+                            </Button>
+                        }
+                    />
+                </div>
+            </div>
+            <div className="container flex flex-col gap-4 p-4">
+                {categories && categories.length > 0 &&
+                    categories.map((category: Category) => (
+                        <CategoryList key={category.category_id} category={category} />
+                    ))
+                }
+            </div>
+        </>
     );
 }
 
@@ -45,25 +68,36 @@ const CategoryList = React.memo(function CategoryList({ category }: { category: 
 
     return (
         <SkeletonWrapper isLoading={artists === undefined || albums === undefined || tracks === undefined}>
-            <div className="flex flex-col gap-4">
-                <div>
-                    <div className="flex items-center justify-between gap-2">
+            <Card>
+                <CardHeader>
+                    <CardTitle className="flex items-center justify-between gap-2">
                         <div className="flex items-center gap-2">
-                            <Label className="text-2xl">{category.category_name}</Label>
+                            <Images className="h-12 w-12 items-center rounded-xl p-2" />
+                            <span>{category.category_name}</span>
                         </div>
-                    </div>
-                </div>
+                        <div className="flex flex-row items-center gap-2">
+                            <EditCategoryDialog
+                                category={category}
+                                trigger={<Button className="flex flex-row items-center gap-2 justify-center w-fit bg-blue-500 hover:bg-blue-600 text-white"><Pencil className="h-4 w-4" /><span className="pt-0.5">Edit</span></Button>}
+                            />
+                            <DeleteCategoryDialog
+                                category={category}
+                                trigger={<Button variant="destructive" className="flex flex-row items-center gap-2 justify-center w-fit"><Trash className="h-4 w-4" /><span className="pt-1">Delete</span></Button>}
+                            />
+                        </div>
+                    </CardTitle>
+                </CardHeader>
+                <Separator />
                 {category.category_type === "artists" ? (
-                    <div className="flex flex-row flex-wrap gap-4">
+                    <div className="flex flex-row flex-wrap gap-4 p-4">
                         {category.category_artists_saved_id.map((cat: any) => {
                             const findArtistsSaved = artists?.find(artist => cat.includes(artist.artist_saved_id ?? ''));
                             return (
-                                <CardCategory key={cat} label={findArtistsSaved && findArtistsSaved.artist_name ? findArtistsSaved.artist_name : ""} image={findArtistsSaved && findArtistsSaved.artist_images[0] ? findArtistsSaved.artist_images[0] : ""} />
-                            )
-                        })}
+                            <CardCategory key={cat} label={findArtistsSaved && findArtistsSaved.artist_name ? findArtistsSaved.artist_name : ""} image={findArtistsSaved && findArtistsSaved.artist_images[0] ? findArtistsSaved.artist_images[0] : ""} />
+                        )})}
                     </div>
                 ) : findArtists ? (
-                    <div className="flex flex-row flex-wrap gap-4">
+                    <div className="flex flex-row flex-wrap gap-4 p-4">
                         {category.category_artists_id.map((cat: any) => {
                             const findArtists = artists?.find(artist => cat.includes(artist.artist_id ?? ''));
                             return (
@@ -75,7 +109,7 @@ const CategoryList = React.memo(function CategoryList({ category }: { category: 
                     null
                 )}
                 {category.category_type === "albums" ? (
-                    <div className="flex flex-row flex-wrap gap-4">
+                    <div className="flex flex-row flex-wrap gap-4 p-4">
                         {category.category_albums_saved_id.map((cat: any) => {
                             const findAlbumsSaved = albums?.find(album => cat.includes(album.album_saved_id ?? ''));
                             return (
@@ -84,7 +118,7 @@ const CategoryList = React.memo(function CategoryList({ category }: { category: 
                         })}
                     </div>
                 ) : findAlbums ? (
-                    <div className="flex flex-row flex-wrap gap-4">
+                    <div className="flex flex-row flex-wrap gap-4 p-4">
                         {category.category_albums_id.map((cat: any) => {
                             const findAlbums = albums?.find(album => cat.includes(album.album_id ?? ''));
                             return (
@@ -96,7 +130,7 @@ const CategoryList = React.memo(function CategoryList({ category }: { category: 
                     null
                 )}
                 {category.category_type === "tracks" ? (
-                    <div className="flex flex-row flex-wrap gap-4">
+                    <div className="flex flex-row flex-wrap gap-4 p-4">
                         {category.category_tracks_saved_id.map((cat: any) => {
                             const findAlbumsImage = albums?.find(album => cat.includes(album.album_tracks_id ?? ''));
                             const findTracksSaved = tracks?.find(track => cat.includes(track.track_saved_id ?? ''));
@@ -107,7 +141,7 @@ const CategoryList = React.memo(function CategoryList({ category }: { category: 
                         })}
                     </div>
                 ) : findTracks ? (
-                    <div className="flex flex-row flex-wrap gap-4">
+                    <div className="flex flex-row flex-wrap gap-4 p-4">
                         {category.category_tracks_id.map((cat: any) => {
                             const findAlbumsImage = albums?.find(album => cat.includes(album.album_tracks_id ?? ''));
                             const findTracks = tracks?.find(track => cat.includes(track.track_id ?? ''));
@@ -119,43 +153,18 @@ const CategoryList = React.memo(function CategoryList({ category }: { category: 
                 ) : (
                     null
                 )}
-            </div>
+            </Card>
         </SkeletonWrapper>
     );
 });
 
-function CardCategory({ label, image }: { label: string; image: string }) {
-    const [isHovered, setIsHovered] = useState(false);
+export function CardCategory({ label, image }: { label: string; image: string }) {
     return (
-        <motion.div
-            className="flex flex-col justify-between rounded-lg duration-200 cursor-pointer"
-            onHoverStart={() => setIsHovered(true)}
-            onHoverEnd={() => setIsHovered(false)}
-        >
-            <div className="flex flex-col items-center gap-2">
-                <div className="relative">
-                    <img
-                        src={image || 'https://res.cloudinary.com/dutlw7bko/image/upload/v1718969701/faketify/placeholder-img_wbhjm1.png'}
-                        className="rounded-lg w-[180px] h-[180px]"
-                        alt="image"
-                    />
-                    <motion.div
-                        className="absolute right-2 bottom-2"
-                        whileHover={{
-                            translateY: 0,
-                            opacity: 1,
-                        }}
-                        animate={{
-                            opacity: isHovered ? 1 : 0,
-                            translateY: isHovered ? 0 : '8px',
-                        }}
-                        transition={{ duration: 0.2 }}
-                    >
-                        <FaPlayCircle className="text-[50px] text-green-500" />
-                    </motion.div>
-                </div>
-                <span className="max-w-[200px] line-clamp-2">{label || ''}</span>
+        <div className="flex border-separate flex-col px-2 pb-2 justify-between rounded-lg border shadow-sm shadow-black/[0.1] dark:shadow-white/[0.1]">
+            <div className="flex flex-col items-center gap-2 p-4">
+                <span className="max-w-[200px] line-clamp-2">{label || ""}</span>
+                <Image src={image || 'https://res.cloudinary.com/dutlw7bko/image/upload/v1718969701/faketify/placeholder-img_wbhjm1.png'} width={100} height={100} className="rounded-lg" alt="image" />
             </div>
-        </motion.div>
+        </div>
     );
 }

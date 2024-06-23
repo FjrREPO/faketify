@@ -13,6 +13,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import UserButton from "../auth/user-button";
 
 const items = [
+    { label: "Category", link: "/dashboard/category" },
     { label: "Artist", link: "/dashboard/music/artist" },
     { label: "Album", link: "/dashboard/music/album" },
     { label: "Track", link: "/dashboard/music/track" },

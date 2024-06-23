@@ -11,7 +11,7 @@ export async function POST(
         artist_followers,
         artist_images,
         artist_genres,
-        artist_saved_id
+        artist_saved_id,
     } = body
 
     const artist = await prisma.artist.create({

@@ -25,7 +25,7 @@ export default function EditTrackDialog({ track, trigger }: Props) {
     const [trackPopularity, setTrackPopularity] = useState<number>(track.track_popularity || 0);
     const [trackDurationMs, setTrackDurationMs] = useState<number>(track.track_duration_ms || 0);
     const [trackFile, setTrackFile] = useState<string>(track.track_file || '');
-    const [trackAlbumsId, setAlbumsTracksId] = useState<string[]>(track.track_albums_id || []);
+    const [trackAlbumsId, setAlbumsTracksId] = useState<string[]>(track.track_albums_id ? [track.track_albums_id] : []);
     const [trackArtistsId, setTrackArtistsId] = useState<string[]>(track.track_artists_id || []);
 
     const { register, handleSubmit, setValue, formState: { errors }, reset } = useForm<FieldValues>({

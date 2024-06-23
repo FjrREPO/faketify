@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import Providers from "@/components/providers/providers";
 import { SessionProvider } from "next-auth/react";
+import MusicLayout from "@/components/music/music-layout";
 
 export const metadata: Metadata = {
   title: "Faketify",
@@ -25,7 +25,9 @@ export default function RootLayout({
             }}
           />
           <Providers>
-            {children}
+            <MusicLayout>
+              {children}
+            </MusicLayout>
           </Providers>
         </body>
       </html>

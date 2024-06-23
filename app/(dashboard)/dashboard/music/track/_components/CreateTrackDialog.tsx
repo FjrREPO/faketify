@@ -33,6 +33,7 @@ export default function CreateTrackDialog({ trigger }: Props) {
     const [trackFile, setTrackFile] = useState<string>('');
     const [trackAlbumsId, setAlbumsTracksId] = useState<string>('');
     const [trackArtistsId, setTrackArtistsId] = useState<string[]>([]);
+    const [trackSavedId, setTrackSavedId] = useState<string>('');
 
 
     const { register, handleSubmit, setValue, formState: { errors }, reset } = useForm<FieldValues>({
@@ -91,12 +92,14 @@ export default function CreateTrackDialog({ trigger }: Props) {
                 setTrackDurationMs(artistData.duration_ms);
                 setAlbumsTracksId(artistData.album.id);
                 setTrackArtistsId(artistData.artists.map((artist: any) => artist.id));
+                setTrackSavedId(artistData.id);
 
                 setValue('track_name', artistData.name);
                 setValue('track_popularity', artistData.popularity);
                 setValue('track_duration_ms', artistData.duration_ms);
                 setValue('track_albums_id', artistData.album.id)
                 setValue('track_artists_id', artistData.artists.map((artist: any) => artist.id));
+                setValue('track_saved_id', artistData.id);
             } catch (error) {
                 console.error(error);
             } finally {

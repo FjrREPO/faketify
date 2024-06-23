@@ -11,7 +11,8 @@ export async function POST(
         album_release_date,
         album_images,
         album_tracks_id,
-        album_artists_id
+        album_artists_id,
+        album_saved_id
     } = body
 
     const album = await prisma.album.create({
@@ -21,7 +22,8 @@ export async function POST(
             album_release_date,
             album_images,
             album_tracks_id,
-            album_artists_id
+            album_artists_id,
+            album_saved_id
         },
     })
 

@@ -33,6 +33,7 @@ export default function CreateAlbumDialog({ trigger }: Props) {
     const [albumImages, setAlbumImages] = useState<string[]>([]);
     const [albumTracksId, setAlbumTracksId] = useState<string[]>([]);
     const [albumArtistsId, setAlbumArtistsId] = useState<string[]>([]);
+    const [albumSavedId, setAlbumSavedId] = useState<string>('');
 
 
     const { register, handleSubmit, setValue, formState: { errors }, reset } = useForm<FieldValues>({
@@ -52,7 +53,8 @@ export default function CreateAlbumDialog({ trigger }: Props) {
                 albumReleaseDate: albumReleaseDate,
                 albumImages: albumImages,
                 albumTracksId: albumTracksId,
-                albumArtistsId: albumArtistsId
+                albumArtistsId: albumArtistsId,
+                albumSavedId: albumSavedId
             };
             await axios.post('/api/music/album', formattedData);
             toast.success('Album created successfully!');
@@ -96,6 +98,7 @@ export default function CreateAlbumDialog({ trigger }: Props) {
                 setAlbumImages(artistData.images.map((image: any) => image.url));
                 setAlbumTracksId(artistData.tracks.items.map((track: any) => track.id));
                 setAlbumArtistsId(artistData.artists.map((artist: any) => artist.id));
+                setAlbumSavedId(artistData.id);
 
                 setValue('album_name', artistData.name);
                 setValue('album_popularity', artistData.popularity);
@@ -103,6 +106,7 @@ export default function CreateAlbumDialog({ trigger }: Props) {
                 setValue('album_images', artistData.images.map((image: any) => image.url));
                 setValue('album_tracks_id', artistData.tracks.items.map((track: any) => track.id));
                 setValue('album_artists_id', artistData.artists.map((artist: any) => artist.id));
+                setValue('album_saved_id', artistData.id);
             } catch (error) {
                 console.error(error);
             } finally {
