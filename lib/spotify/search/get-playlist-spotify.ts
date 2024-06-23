@@ -1,6 +1,6 @@
-export const getArtistByIdSpotify = async (id: string, token: string): Promise<any[]> => {
+export const getPlaylistSpotify = async (keyword: string, token: string): Promise<any[]> => {
     try {
-        const response = await fetch(`https://api.spotify.com/v1/artists/${id}`, {
+        const response = await fetch(`https://api.spotify.com/v1/search?q=${keyword}&type=playlist`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -11,7 +11,7 @@ export const getArtistByIdSpotify = async (id: string, token: string): Promise<a
         }
 
         const jsonData = await response.json();
-        return jsonData;
+        return jsonData.playlists.items;
     } catch (error) {
         console.error("Spotify data fetch error:", error);
         return [];

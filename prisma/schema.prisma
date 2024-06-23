@@ -113,23 +113,27 @@ model Track {
 }
 
 model Playlist {
-  playlist_id String @id @default(uuid())
-  playlist_name String
+  playlist_id          String   @id @default(uuid())
+  playlist_name        String
   playlist_description String?
-  playlist_images String[]
-  playlist_tracks_id String[]
-  playlist_albums_id String
-  playlist_artists_id String[]
+  playlist_followers   String?
+  playlist_images      String[]
+  playlist_tracks_id   String[]
+  playlist_albums_id   String[]
+  playlist_artists_id  String[]
+  playlist_saved_id    String?
 }
 
 model Category {
-  category_id               String   @id @default(uuid())
-  category_name             String
-  category_type             String
-  category_artists_id       String[]
-  category_albums_id        String[]
-  category_tracks_id        String[]
-  category_artists_saved_id String[]
-  category_albums_saved_id  String[]
-  category_tracks_saved_id  String[]
+  category_id                 String   @id @default(uuid())
+  category_name               String
+  category_type               String
+  category_artists_id         String[]
+  category_albums_id          String[]
+  category_tracks_id          String[]
+  category_playlists_id       String[]
+  category_artists_saved_id   String[]
+  category_albums_saved_id    String[]
+  category_tracks_saved_id    String[]
+  category_playlists_saved_id String[]
 }

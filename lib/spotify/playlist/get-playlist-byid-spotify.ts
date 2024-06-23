@@ -1,6 +1,6 @@
-export const getArtistByIdSpotify = async (id: string, token: string): Promise<any[]> => {
+export const getPlaylistByIdSpotify = async (id: string, token: string): Promise<any[]> => {
     try {
-        const response = await fetch(`https://api.spotify.com/v1/artists/${id}`, {
+        const response = await fetch(`https://api.spotify.com/v1/playlists/${id}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },

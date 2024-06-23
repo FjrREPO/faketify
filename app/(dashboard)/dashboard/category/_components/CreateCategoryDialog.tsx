@@ -11,7 +11,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Loader } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
-import { Artist, Album, Track } from '@prisma/client';
+import { Artist, Album, Track, Playlist } from '@prisma/client';
 import { categoryData } from '@/data/category';
 
 interface Props {
@@ -23,6 +23,7 @@ export default function CreateCategoryDialog({ trigger }: Props) {
     const [queryArtist, setQueryArtist] = useState('');
     const [queryAlbum, setQueryAlbum] = useState('');
     const [queryTrack, setQueryTrack] = useState('');
+    const [queryPlaylist, setQueryPlaylist] = useState('');
     const [pending, setPending] = useState(false);
 
     const [categoryName, setCategoryName] = useState<string>('');
@@ -32,6 +33,7 @@ export default function CreateCategoryDialog({ trigger }: Props) {
     const [selectedArtists, setSelectedArtists] = useState<Artist[]>([]);
     const [selectedAlbums, setSelectedAlbums] = useState<Album[]>([]);
     const [selectedTracks, setSelectedTracks] = useState<Track[]>([]);
+    const [selectedPlaylists, setSelectedPlaylists] = useState<Playlist[]>([]);
 
     const { register, handleSubmit, setValue, formState: { errors }, reset } = useForm<FieldValues>({
         defaultValues: {},
@@ -52,6 +54,11 @@ export default function CreateCategoryDialog({ trigger }: Props) {
         queryFn: () => fetch('/api/music/track').then((res) => res.json()),
     });
 
+    const playlists = useQuery<Playlist[]>({
+        queryKey: ['playlist'],
+        queryFn: () => fetch('/api/music/playlist').then((res) => res.json()),
+    });
+
     useEffect(() => {
         if (selectedCategory === 'artists') {
             setValue('category_type', selectedCategory);
@@ -65,8 +72,12 @@ export default function CreateCategoryDialog({ trigger }: Props) {
             setValue('category_type', selectedCategory);
             setValue('category_tracks_id', selectedTracks.map(track => track.track_id));
             setValue('category_tracks_saved_id', selectedTracks.map(track => track.track_saved_id));
+        } else if (selectedCategory === 'playlists') {
+            setValue('category_type', selectedCategory);
+            setValue('category_playlists_id', selectedPlaylists.map(playlist => playlist.playlist_id));
+            setValue('category_playlists_saved_id', selectedPlaylists.map(playlist => playlist.playlist_saved_id));
         }
-    }, [setValue, selectedCategory, selectedArtists, selectedAlbums, selectedTracks]);
+    }, [setValue, selectedCategory, selectedArtists, selectedAlbums, selectedTracks, selectedPlaylists]);
 
     const onSubmit: SubmitHandler<FieldValues> = async (data) => {
         if (pending) return;
@@ -77,6 +88,7 @@ export default function CreateCategoryDialog({ trigger }: Props) {
             const formattedData = {
                 ...data
             };
+            console.log(formattedData);
             await axios.post('/api/category', formattedData);
             toast.success('Category created successfully!');
             reset();
@@ -115,6 +127,15 @@ export default function CreateCategoryDialog({ trigger }: Props) {
             setSelectedTracks(selectedTracks.filter(a => a.track_id !== track.track_id));
         } else {
             setSelectedTracks([...selectedTracks, track]);
+        }
+    };
+
+    const handlePlaylistSelection = (playlist: Playlist) => {
+        const isSelected = selectedPlaylists.some(a => a.playlist_id === playlist.playlist_id);
+        if (isSelected) {
+            setSelectedPlaylists(selectedPlaylists.filter(a => a.playlist_id !== playlist.playlist_id));
+        } else {
+            setSelectedPlaylists([...selectedPlaylists, playlist]);
         }
     };
 
@@ -252,6 +273,40 @@ export default function CreateCategoryDialog({ trigger }: Props) {
                                                 onClick={() => handleTrackSelection(track)}
                                             >
                                                 {track.track_name}
+                                            </SelectGroup>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                        </div>
+                    )}
+                    {selectedCategory === "playlists" && playlists.data && playlists.data.length > 0 && (
+                        <div className="flex flex-row gap-5">
+                            <div className="w-1/2">
+                                <Input
+                                    type="text"
+                                    value={queryPlaylist}
+                                    onChange={(e) => setQueryPlaylist(e.target.value)}
+                                    placeholder="Search for playlist"
+                                />
+                            </div>
+                            <div className="w-1/2">
+                                <Select>
+                                    <SelectTrigger>
+                                        <Input
+                                            type="text"
+                                            readOnly
+                                            value={selectedPlaylists.length > 0 ? `${selectedPlaylists.length} playlists selected` : "Select playlist"}
+                                        />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {playlists.data.map(playlist => (
+                                            <SelectGroup
+                                                key={playlist.playlist_id}
+                                                className={`cursor-pointer ${selectedPlaylists.some(a => a.playlist_id === playlist.playlist_id) ? 'bg-blue-200' : ''}`}
+                                                onClick={() => handlePlaylistSelection(playlist)}
+                                            >
+                                                {playlist.playlist_name}
                                             </SelectGroup>
                                         ))}
                                     </SelectContent>

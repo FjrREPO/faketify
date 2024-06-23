@@ -11,9 +11,11 @@ export async function POST(
         category_artists_id,
         category_albums_id,
         category_tracks_id,
+        category_playlists_id,
         category_artists_saved_id,
         category_albums_saved_id,
-        category_tracks_saved_id
+        category_tracks_saved_id,
+        category_playlists_saved_id
     } = body
 
     const category = await prisma.category.create({
@@ -23,9 +25,11 @@ export async function POST(
             category_artists_id,
             category_albums_id,
             category_tracks_id,
+            category_playlists_id,
             category_artists_saved_id,
             category_albums_saved_id,
-            category_tracks_saved_id
+            category_tracks_saved_id,
+            category_playlists_saved_id
         },
     })
     

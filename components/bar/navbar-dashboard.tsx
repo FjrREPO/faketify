@@ -17,6 +17,7 @@ const items = [
     { label: "Artist", link: "/dashboard/music/artist" },
     { label: "Album", link: "/dashboard/music/album" },
     { label: "Track", link: "/dashboard/music/track" },
+    { label: "Playlist", link: "/dashboard/music/playlist" },
 ];
 
 export default function NavbarDashboard({ users }: { users: any }) {

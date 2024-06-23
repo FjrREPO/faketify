@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Images, Pencil, Plus, Trash } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import SkeletonWrapper from "@/components/loader/skeleton-wrapper";
-import { Album, Artist, Category, Track } from "@prisma/client";
+import { Album, Artist, Category, Playlist, Track } from "@prisma/client";
 import Image from "next/image";
 import DeleteCategoryDialog from "./DeleteCategoryDialog";
 import CreateCategoryDialog from "./CreateCategoryDialog";
@@ -61,10 +61,15 @@ const CategoryList = React.memo(function CategoryList({ category }: { category: 
         queryKey: ["track"],
         queryFn: () => fetch(`/api/music/track`).then(res => res.json()),
     });
+    const { data: playlists } = useQuery<Playlist[]>({
+        queryKey: ["playlist"],
+        queryFn: () => fetch(`/api/music/playlist`).then(res => res.json()),
+    });
 
     const findArtists = artists?.find(artist => category.category_artists_id.includes(artist.artist_id));
     const findAlbums = albums?.find(album => category.category_albums_id.includes(album.album_id));
     const findTracks = tracks?.find(track => category.category_tracks_id.includes(track.track_id));
+    const findPlaylists = playlists?.find(playlist => category.category_playlists_id.includes(playlist.playlist_id));
 
     return (
         <SkeletonWrapper isLoading={artists === undefined || albums === undefined || tracks === undefined}>
@@ -147,6 +152,28 @@ const CategoryList = React.memo(function CategoryList({ category }: { category: 
                             const findTracks = tracks?.find(track => cat.includes(track.track_id ?? ''));
                             return (
                                 <CardCategory key={cat} label={findTracks && findTracks.track_name ? findTracks.track_name : ""} image={findAlbumsImage && findAlbumsImage.album_images[0] ? findAlbumsImage.album_images[0] : ""} />
+                            )
+                        })}
+                    </div>
+                ) : (
+                    null
+                )}
+                {category.category_type === "playlists" ? (
+                    <div className="flex flex-row flex-wrap gap-4 p-4">
+                        {category.category_playlists_saved_id.map((cat: any) => {
+                            const findPlaylistsSaved = playlists?.find(playlist => cat.includes(playlist.playlist_saved_id ?? ''));
+                            console.log(findPlaylistsSaved)
+                            return (
+                                <CardCategory key={cat} label={findPlaylistsSaved && findPlaylistsSaved.playlist_name ? findPlaylistsSaved.playlist_name : ""} image={findPlaylistsSaved && findPlaylistsSaved.playlist_images[0] ? findPlaylistsSaved.playlist_images[0] : ""} />
+                            )
+                        })}
+                    </div>
+                ) : findPlaylists ? (
+                    <div className="flex flex-row flex-wrap gap-4 p-4">
+                        {category.category_playlists_id.map((cat: any) => {
+                            const findPlaylists = playlists?.find(playlist => cat.includes(playlist.playlist_id ?? ''));
+                            return (
+                                <CardCategory key={cat} label={findPlaylists && findPlaylists.playlist_name ? findPlaylists.playlist_name : ""} image={findPlaylists && findPlaylists.playlist_images[0] ? findPlaylists.playlist_images[0] : ""} />
                             )
                         })}
                     </div>
