@@ -18,12 +18,21 @@ import MusicUpload from '@/components/uploader/music-upload';
 interface Props {
     trigger: React.ReactNode;
 }
+interface SpotifyTrack {
+    id: string;
+    name: string;
+    popularity: number;
+    duration_ms: number;
+    album: { id: string };
+    artists: { id: string; name: string; }[];
+}
 
 export default function CreateTrackDialog({ trigger }: Props) {
     const [open, setOpen] = useState(false);
     const [query, setQuery] = useState('');
-    const [data, setData] = useState<any>([]);
-    const { token, loading, setLoading, error, setError } = useContext<any>(SpotifyContext);
+    
+    const [data, setData] = useState<SpotifyTrack[]>([]);
+    const { token, loading, setLoading, error, setError } = useContext<SpotifyContextType>(SpotifyContext);
     const [pending, setPending] = useState(false);
 
     const [selectedTrackId, setSelectedTrackId] = useState<string>('');
@@ -69,36 +78,37 @@ export default function CreateTrackDialog({ trigger }: Props) {
 
         const fetchSpotifyData = async () => {
             if (!token || query.length < 2) return;
-            setLoading(true);
-            setError(null);
+            setLoading!(true);
+            setError!(null);
 
             try {
-                const fetchedData: any = await getTracksSpotify(query, token);
+                const fetchedData = await getTracksSpotify(query, token);
                 setData(fetchedData);
             } catch (error) {
-                setError('Failed to fetch tracks');
+                setError!('Failed to fetch tracks');
             } finally {
-                setLoading(false);
+                setLoading!(false);
             }
         };
 
         const fetchArtistDataById = async () => {
             if (!selectedTrackId) return
             try {
-                const artistData: any = await getTrackByIdSpotify(selectedTrackId, token);
-                setTrackName(artistData.name);
-                setTrackPopularity(artistData.popularity);
-                setTrackDurationMs(artistData.duration_ms);
-                setAlbumsTracksId(artistData.album.id);
-                setTrackArtistsId(artistData.artists.map((artist: any) => artist.id));
-                setTrackSavedId(artistData.id);
+                const artistData = await getTrackByIdSpotify(selectedTrackId, token!);
+                const track = Array.isArray(artistData) ? artistData[0] : artistData;
+                setTrackName(track.name);
+                setTrackPopularity(track.popularity);
+                setTrackDurationMs(track.duration_ms);
+                setAlbumsTracksId(track.album.id);
+                setTrackArtistsId(track.artists.map((artist: { id: string }) => artist.id));
+                setTrackSavedId(track.id);
 
-                setValue('track_name', artistData.name);
-                setValue('track_popularity', artistData.popularity);
-                setValue('track_duration_ms', artistData.duration_ms);
-                setValue('track_albums_id', artistData.album.id)
-                setValue('track_artists_id', artistData.artists.map((artist: any) => artist.id));
-                setValue('track_saved_id', artistData.id);
+                setValue('track_name', track.name);
+                setValue('track_popularity', track.popularity);
+                setValue('track_duration_ms', track.duration_ms);
+                setValue('track_albums_id', track.album.id)
+                setValue('track_artists_id', track.artists.map((artist: { id: string }) => artist.id));
+                setValue('track_saved_id', track.id);
             } catch (error) {
                 console.error(error);
             } finally {
@@ -120,7 +130,7 @@ export default function CreateTrackDialog({ trigger }: Props) {
                 clearTimeout(timeoutId);
             }
         };
-    }, [query, token, setLoading, setError, selectedTrackId, pending]);
+    }, [query, token, setLoading, setError, selectedTrackId, pending, setValue]);
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
@@ -134,7 +144,7 @@ export default function CreateTrackDialog({ trigger }: Props) {
                         <Input
                             type="text"
                             value={query}
-                            onChange={(e: any) => setQuery(e.target.value)}
+                            onChange={(e) => setQuery(e.target.value)}
                             placeholder="Search for track"
                         />
                     </div>
@@ -148,7 +158,7 @@ export default function CreateTrackDialog({ trigger }: Props) {
                                 />
                             </SelectTrigger>
                             <SelectContent>
-                                {data.map((track: any) => (
+                                {data.map((track) => (
                                     <SelectGroup
                                         key={track.id}
                                         className='cursor-pointer'
@@ -156,7 +166,7 @@ export default function CreateTrackDialog({ trigger }: Props) {
                                             setSelectedTrackId(track.id);
                                         }}
                                     >
-                                        {track.name}{" - "}{track.artists.map((artist: any) => artist.name).join(', ')}
+                                        {track.name}{" - "}{track.artists.map((artist) => artist.name).join(', ')}
                                     </SelectGroup>
                                 ))}
                             </SelectContent>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { Suspense, useCallback, useEffect, useState } from "react";
 import { BeatLoader } from "react-spinners";
 import { useSearchParams } from "next/navigation";
 
@@ -9,7 +9,15 @@ import { CardWrapper } from "@/components/auth/card-wrapper";
 import { FormError } from "@/components/auth/form-error";
 import { FormSuccess } from "@/components/auth/form-success";
 
-export const NewVerificationForm = () => {
+export const NewVerificationForm: React.FC = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <NewVerificationComponent />
+    </Suspense>
+  );
+};
+
+export const NewVerificationComponent = () => {
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
 

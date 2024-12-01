@@ -11,6 +11,7 @@ import { Button, buttonVariants } from "../ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import UserButton from "../auth/user-button";
+import { User } from "@prisma/client";
 
 type NavbarItemProps = {
     label: string;
@@ -25,7 +26,7 @@ const items = [
     { label: "Playlist", link: "/dashboard/music/playlist" },
 ];
 
-export default function NavbarDashboard({ users }: { users: any }) {
+export default function NavbarDashboard({ users }: { users: User }) {
     const filteredItems = users.role === 'ADMIN' ? items : items.filter(item => item.label !== "Users");
 
     return (
@@ -36,7 +37,7 @@ export default function NavbarDashboard({ users }: { users: any }) {
     );
 }
 
-function MobileNavbar({ items }: { items: any }) {
+function MobileNavbar({ items }: { items: NavbarItemProps[] }) {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
@@ -83,14 +84,14 @@ function MobileNavbar({ items }: { items: any }) {
     );
 }
 
-function DesktopNavbar({ items }: { items: any }) {
+function DesktopNavbar({ items }: { items: NavbarItemProps[] }) {
     return (
         <div className="hidden border-separate border-b bg-background md:block">
             <nav className="container flex items-center justify-between gap-x-4">
                 <Logo />
                 <div className="flex h-[80px] min-h-[60px] items-center gap-x-4">
                     <div className="flex h-full gap-x-2">
-                        {items.map((item: any) => (
+                        {items.map((item) => (
                             item.label === 'Payment' ?
                                 (
                                     <DropdownMenu key={item.label}>

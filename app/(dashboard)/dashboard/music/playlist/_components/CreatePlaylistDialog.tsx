@@ -15,25 +15,39 @@ import { Loader } from 'lucide-react';
 import { getPlaylistSpotify } from '@/lib/spotify/search/get-playlist-spotify';
 import { getPlaylistByIdSpotify } from '@/lib/spotify/playlist/get-playlist-byid-spotify';
 
+interface Playlist {
+    id: string;
+    name: string;
+}
+
 interface Props {
     trigger: React.ReactNode;
+}
+
+interface PlaylistData {
+    name: string;
+    description: string;
+    followers: { total: number };
+    images: { url: string }[];
+    tracks: { items: { track: { id: string; album: { id: string }; artists: { id: string }[] } }[] };
+    id: string;
 }
 
 export default function CreatePlaylistDialog({ trigger }: Props) {
     const [open, setOpen] = useState(false);
     const [query, setQuery] = useState('');
-    const [data, setData] = useState<any>([]);
+    const [data, setData] = useState<Playlist[]>([]);
     const [selectedPlaylistId, setSelectedPlaylistId] = useState<string>('');
-    const { token, loading, setLoading, error, setError } = useContext<any>(SpotifyContext);
+    const { token, loading, setLoading, error, setError } = useContext<SpotifyContextType>(SpotifyContext);
     const [pending, setPending] = useState(false);
 
     const [playlistName, setPlaylistName] = useState('');
     const [playlistDescription, setPlaylistDescription] = useState('');
-    const [playlistImages, setPlaylistImages] = useState<any[]>([]);
+    const [playlistImages, setPlaylistImages] = useState<string[]>([]);
     const [playlistFollowers, setPlaylistFollowers] = useState('');
-    const [playlistArtistsId, setPlaylistArtistsId] = useState<any[]>([]);
-    const [playlistAlbumsId, setPlaylistAlbumsId] = useState<any[]>([]);
-    const [playlistTracksId, setPlaylistTracksId] = useState<any[]>([]);
+    const [playlistArtistsId, setPlaylistArtistsId] = useState<string[]>([]);
+    const [playlistAlbumsId, setPlaylistAlbumsId] = useState<string[]>([]);
+    const [playlistTracksId, setPlaylistTracksId] = useState<string[]>([]);
     const [playlistSavedId, setPlaylistSavedId] = useState<string>('');
 
     const { register, handleSubmit, setValue, formState: { errors }, reset } = useForm<FieldValues>({
@@ -69,39 +83,39 @@ export default function CreatePlaylistDialog({ trigger }: Props) {
 
         const fetchSpotifyData = async () => {
             if (!token || query.length < 2) return;
-            setLoading(true);
-            setError(null);
+            setLoading!(true);
+            setError!(null);
 
             try {
-                const fetchedData: any = await getPlaylistSpotify(query, token);
+                const fetchedData = await getPlaylistSpotify(query, token);
                 setData(fetchedData);
             } catch (error) {
-                setError('Failed to fetch playlists');
+                setError!('Failed to fetch playlists');
             } finally {
-                setLoading(false);
+                setLoading!(false);
             }
         };
 
         const fetchPlaylistDataById = async () => {
             if (!selectedPlaylistId) return
             try {
-                const playlistData: any = await getPlaylistByIdSpotify(selectedPlaylistId, token);
+                const playlistData = await getPlaylistByIdSpotify(selectedPlaylistId, token!) as unknown as PlaylistData;
                 setPlaylistName(playlistData.name);
                 setPlaylistDescription(playlistData.description);
-                setPlaylistFollowers(playlistData.followers.total);
-                setPlaylistImages(playlistData.images.map((image: any) => image.url));
-                setPlaylistArtistsId(playlistData.tracks.items.flatMap((track: any) => track.track.artists.map((artist: any) => artist.id)));
-                setPlaylistAlbumsId(playlistData.tracks.items.map((track: any) => track.track.album.id));
-                setPlaylistTracksId(playlistData.tracks.items.map((track: any) => track.track.id));
+                setPlaylistFollowers(playlistData.followers.total.toString());
+                setPlaylistImages(playlistData.images.map((image) => image.url));
+                setPlaylistArtistsId(playlistData.tracks.items.flatMap((track) => track.track.artists.map((artist) => artist.id)));
+                setPlaylistAlbumsId(playlistData.tracks.items.map((track) => track.track.album.id));
+                setPlaylistTracksId(playlistData.tracks.items.map((track) => track.track.id));
                 setPlaylistSavedId(playlistData.id);
 
                 setValue('playlist_name', playlistData.name);
                 setValue('playlist_description', playlistData.description);
                 setValue('playlist_followers', playlistData.followers.total);
-                setValue('playlist_images', playlistData.images.map((image: any) => image.url));
-                setValue('playlist_artists_id', playlistData.tracks.items.flatMap((track: any) => track.track.artists.map((artist: any) => artist.id)));
-                setValue('playlist_albums_id', playlistData.tracks.items.map((track: any) => track.track.album.id));
-                setValue('playlist_tracks_id', playlistData.tracks.items.map((track: any) => track.track.id));
+                setValue('playlist_images', playlistData.images.map((image) => image.url));
+                setValue('playlist_artists_id', playlistData.tracks.items.flatMap((track) => track.track.artists.map((artist) => artist.id)));
+                setValue('playlist_albums_id', playlistData.tracks.items.map((track) => track.track.album.id));
+                setValue('playlist_tracks_id', playlistData.tracks.items.map((track) => track.track.id));
                 setValue('playlist_saved_id', playlistData.id);
             } catch (error) {
                 console.error(error);
@@ -138,7 +152,7 @@ export default function CreatePlaylistDialog({ trigger }: Props) {
                         <Input
                             type="text"
                             value={query}
-                            onChange={(e: any) => setQuery(e.target.value)}
+                            onChange={(e) => setQuery(e.target.value)}
                             placeholder="Search for playlist"
                         />
                     </div>
@@ -152,7 +166,7 @@ export default function CreatePlaylistDialog({ trigger }: Props) {
                                 />
                             </SelectTrigger>
                             <SelectContent>
-                                {data.map((playlist: any) => (
+                                {data.map((playlist: Playlist) => (
                                     <SelectGroup
                                         key={playlist.id}
                                         className='cursor-pointer'
@@ -194,8 +208,8 @@ export default function CreatePlaylistDialog({ trigger }: Props) {
                         <Label>Playlist Images</Label>
                         <ImageUpload
                             value={playlistImages}
-                            onChange={(e: any) => {
-                                setPlaylistImages(e.target.value);
+                            onChange={(e) => {
+                                setPlaylistImages(e);
                                 setValue('playlist_images', e);
                             }}
                         />

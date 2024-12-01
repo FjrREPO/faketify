@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 
 export async function PUT(
     request: Request,
-    { params }: { params: { playlistId: string } }
+    { params }: { params: Promise<{ playlistId: string }> }
 ) {
     const body = await request.json();
     const {
@@ -17,8 +17,9 @@ export async function PUT(
         playlist_saved_id
     } = body;
 
+    const { playlistId } = await params;
     const playlist = await prisma.playlist.update({
-        where: { playlist_id: params.playlistId },
+        where: { playlist_id: playlistId },
         data: {
             playlist_name,
             playlist_description,
@@ -36,10 +37,11 @@ export async function PUT(
 
 export async function DELETE(
     request: Request,
-    { params }: { params: { playlistId: string } }
+    { params }: { params: Promise<{ playlistId: string }> }
 ) {
+    const { playlistId } = await params;
     const playlist = await prisma.playlist.delete({
-        where: { playlist_id: params.playlistId },
+        where: { playlist_id: playlistId },
     });
     return NextResponse.json(playlist);
 }

@@ -1,10 +1,15 @@
 import prisma from "@/lib/prisma/prisma";
 import { NextResponse } from "next/server";
 
+interface Params {
+    params: Promise<{ albumId: string }>;
+}
+
 export async function PUT(
     request: Request,
-    { params }: { params: { albumId: string } }
+    { params }: Params
 ) {
+    const { albumId } = await params;
     const body = await request.json();
     const {
         album_name,
@@ -16,7 +21,7 @@ export async function PUT(
     } = body;
 
     const album = await prisma.album.update({
-        where: { album_id: params.albumId },
+        where: { album_id: albumId },
         data: {
             album_name,
             album_popularity,
@@ -32,10 +37,11 @@ export async function PUT(
 
 export async function DELETE(
     request: Request,
-    { params }: { params: { albumId: string } }
+    { params }: Params
 ) {
+    const { albumId } = await params;
     const album = await prisma.album.delete({
-        where: { album_id: params.albumId },
+        where: { album_id: albumId },
     });
     return NextResponse.json(album);
 }

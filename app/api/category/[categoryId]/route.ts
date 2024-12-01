@@ -1,10 +1,15 @@
 import prisma from "@/lib/prisma/prisma";
 import { NextResponse } from "next/server";
 
+interface Params {
+    params: Promise<{ categoryId: string }>;
+}
+
 export async function PUT(
     request: Request,
-    { params }: { params: { categoryId: string } }
+    { params }: Params
 ) {
+    const { categoryId } = await params;
     const body = await request.json();
     const {
         category_name,
@@ -20,7 +25,7 @@ export async function PUT(
     } = body;
 
     const category = await prisma.category.update({
-        where: { category_id: params.categoryId },
+        where: { category_id: categoryId },
         data: {
             category_name,
             category_type,
@@ -40,10 +45,11 @@ export async function PUT(
 
 export async function DELETE(
     request: Request,
-    { params }: { params: { categoryId: string } }
+    { params }: Params
 ) {
+    const { categoryId } = await params;
     const category = await prisma.category.delete({
-        where: { category_id: params.categoryId },
+        where: { category_id: categoryId },
     });
     return NextResponse.json(category);
 }

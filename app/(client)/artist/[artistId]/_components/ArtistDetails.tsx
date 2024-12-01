@@ -9,6 +9,7 @@ import { useState, useEffect } from "react";
 import { GoPlusCircle } from "react-icons/go";
 import { BsThreeDots } from "react-icons/bs";
 import ArtistRecommendCard from "./ArtistRecommendCard";
+import Image from "next/image";
 
 export default function ArtistDetails({ artistId }: { artistId: string }) {
     const tracks = useQuery<Track[]>({
@@ -73,16 +74,18 @@ export default function ArtistDetails({ artistId }: { artistId: string }) {
         >
             <div className="flex flex-col pl-5 pt-[90px]">
                 <div className="flex flex-row gap-5">
-                    <img
+                    <Image
                         src={imageUrl}
                         alt="Album Cover"
                         className="w-[200px] rounded-sm bg-none shadow-xl"
+                        width={200}
+                        height={200}
                     />
                     <div className="flex flex-col gap-3 justify-end">
                         <Label className="capitalize">{findCategoryByTrackId?.category_type}</Label>
                         <Label className="text-5xl font-black capitalize">{findArtistById?.artist_name}</Label>
                         <div className="flex flex-row items-center gap-2">
-                            <img src={findArtistById?.artist_images[0]} alt="" className="w-7 h-7 rounded-full" />
+                            <Image width={10} height={10} src={findArtistById?.artist_images[0] || ""} alt="" className="w-7 h-7 rounded-full" />
                             <Label className="text-lg">{findArtistById?.artist_name}{" | "}</Label>
                             <Label>{`${date.getMinutes()}:${date.getSeconds()}`}{" | "}</Label>
                             <Label>{findArtistById?.artist_followers || ''}{" "}Followers</Label>

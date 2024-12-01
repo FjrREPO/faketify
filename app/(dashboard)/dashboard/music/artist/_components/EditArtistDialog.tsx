@@ -124,8 +124,8 @@ export default function EditArtistDialog({ artist, trigger }: Props) {
                         <Label>Artist Images</Label>
                         <ImageUpload
                             value={artistImages}
-                            onChange={(e: any) => {
-                                setArtistImages(e.target.value);
+                            onChange={(e) => {
+                                setArtistImages(e);
                                 setValue('artist_images', e);
                             }}
                         />

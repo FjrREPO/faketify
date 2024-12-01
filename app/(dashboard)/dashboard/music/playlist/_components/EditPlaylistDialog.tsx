@@ -24,7 +24,7 @@ export default function EditPlaylistDialog({ trigger, playlist }: Props) {
 
     const [playlistName, setPlaylistName] = useState<string>(playlist.playlist_name);
     const [playlistDescription, setPlaylistDescription] = useState<string>(playlist.playlist_description || '');
-    const [playlistImages, setPlaylistImages] = useState<any[]>(playlist.playlist_images || []);
+    const [playlistImages, setPlaylistImages] = useState<string[]>(playlist.playlist_images || []);
     const [playlistFollowers, setPlaylistFollowers] = useState<string>(playlist.playlist_followers || '');
 
     const { register, handleSubmit, setValue, formState: { errors }, reset } = useForm<FieldValues>({
@@ -89,8 +89,8 @@ export default function EditPlaylistDialog({ trigger, playlist }: Props) {
                         <Label>Playlist Images</Label>
                         <ImageUpload
                             value={playlistImages}
-                            onChange={(e: any) => {
-                                setPlaylistImages(e.target.value);
+                            onChange={(e) => {
+                                setPlaylistImages(e);
                                 setValue('playlist_images', e);
                             }}
                         />

@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { ThemeToggle } from '../theme/theme-toggle';
 import UserButton from '../auth/user-button';
 import { GoChevronLeft, GoChevronRight } from "react-icons/go";
@@ -22,7 +22,9 @@ function DesktopNavbar() {
 
   const [isSelected, setIsSelected] = useState('all');
 
-  const handleSelectFilter = (filter: any) => {
+  type Filter = 'all' | 'music';
+
+  const handleSelectFilter = (filter: Filter) => {
     setIsSelected((prevSelected) => (prevSelected === filter ? 'all' : filter));
   };
 

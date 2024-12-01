@@ -95,8 +95,8 @@ export default function EditTrackDialog({ track, trigger }: Props) {
                         <Label>Track Music File</Label>
                         <MusicUpload
                             value={trackFile}
-                            onChange={(e: any) => {
-                                setTrackFile(e.target.value);
+                            onChange={(e) => {
+                                setTrackFile(e);
                                 setValue('track_file', e);
                             }}
                         />

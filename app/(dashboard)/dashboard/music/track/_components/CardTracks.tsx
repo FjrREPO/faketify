@@ -17,6 +17,10 @@ import MusicPlayer from "@/components/music/music-player";
 import { FaPlayCircle } from "react-icons/fa";
 import { useMusicPlayer } from "@/components/providers/music-provider";
 
+import { UseQueryResult } from "@tanstack/react-query";
+
+type QueryData = UseQueryResult<Track[], Error>;
+
 export default function CardTracks() {
     const { setCurrentTrack } = useMusicPlayer();
 
@@ -49,7 +53,7 @@ export default function CardTracks() {
     );
 }
 
-function CardList({ tracks, onTrackSelect }: { tracks: any, onTrackSelect: (track: Track) => void }) {
+function CardList({ tracks, onTrackSelect }: { tracks: QueryData, onTrackSelect: (track: Track) => void }) {
     const album = useQuery<Album[]>({
         queryKey: ["album"],
         queryFn: () =>
@@ -104,17 +108,17 @@ function CardList({ tracks, onTrackSelect }: { tracks: any, onTrackSelect: (trac
             {dataAvailable && (
                 <div className="flex flex-row flex-wrap gap-4 p-4">
                     <SkeletonWrapper isLoading={tracks.isLoading}>
-                        {tracks.data.map((track: any) => {
-                            const filteredAlbum = album.data && track.track_albums_id.length > 0 &&
-                                album.data.find((item: any) => track.track_albums_id.includes(item.album_saved_id));
+                        {tracks.data.map((track: Track) => {
+                            const filteredAlbum = album.data && (track.track_albums_id?.length ?? 0) > 0 &&
+                                album.data.find((item) => track.track_albums_id?.includes(item.album_saved_id as string));
                             const filteredArtist = artist.data && track.track_artists_id.length > 0 &&
-                                artist.data.find((item: any) => track.track_artists_id.includes(item.artist_saved_id));
+                                artist.data.find((item) => track.track_artists_id.includes(item.artist_saved_id as string));
                             return (
                                 <CardTrack
                                     key={track.track_id}
                                     track={track}
-                                    filteredArtist={filteredArtist}
-                                    filteredAlbum={filteredAlbum}
+                                    filteredArtist={filteredArtist as Artist}
+                                    filteredAlbum={filteredAlbum as Album}
                                     onTrackSelect={onTrackSelect}
                                 />
                             )
@@ -126,7 +130,7 @@ function CardList({ tracks, onTrackSelect }: { tracks: any, onTrackSelect: (trac
     );
 }
 
-function CardTrack({ track, filteredArtist, filteredAlbum, onTrackSelect }: { track: Track, filteredArtist: any, filteredAlbum: any, onTrackSelect: (track: Track) => void }) {
+function CardTrack({ track, filteredArtist, filteredAlbum, onTrackSelect }: { track: Track, filteredArtist: Artist, filteredAlbum: Album, onTrackSelect: (track: Track) => void }) {
     if (!filteredAlbum) return null;
     return (
         <div className="flex border-separate flex-col px-2 pb-2 justify-between rounded-lg border shadow-sm shadow-black/[0.1] dark:shadow-white/[0.1]">

@@ -1,7 +1,7 @@
 'use client'
 
 import { ImageUp } from "lucide-react"
-import { CldUploadWidget } from "next-cloudinary"
+import { CldUploadWidget, CldUploadWidgetProps } from "next-cloudinary"
 import Image from "next/image"
 import { useCallback } from "react"
 
@@ -11,7 +11,9 @@ interface ImageUploadProps {
 }
 
 declare global {
-    var cloudinary: any
+    var cloudinary: {
+        createUploadWidget: (options: CldUploadWidgetProps, callback: (error: Error | null, result: CldUploadWidgetProps) => void) => void
+    }
 }
 
 const ImageUpload: React.FC<ImageUploadProps> = ({
@@ -19,7 +21,9 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
     value
 }) => {
     const handleUpload = useCallback((result: any) => {
-        onChange([...value, result.info.secure_url]);
+        if (result.info && typeof result.info.secure_url === 'string') {
+            onChange([...value, result.info.secure_url]);
+        }
     }, [onChange, value]);
 
     return <CldUploadWidget
@@ -29,7 +33,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
         {({ open }) => {
             return (
                 <div onClick={() => open && open()}
-                    className={`relative cursor-pointer hover:opacity-70 transition border-dashed border-2 ${value && value.length > 0 ? 'p-0 p-5' : 'p-10'} border-neutral-300 flex flex-col justify-center items-center gap-4 text-neutral-600`}
+                    className={`relative cursor-pointer hover:opacity-70 transition border-dashed border-2 ${value && value.length > 0 ? 'p-5' : 'p-10'} border-neutral-300 flex flex-col justify-center items-center gap-4 text-neutral-600`}
                 >
                     {value && value.length <= 0 && (
                         <div>

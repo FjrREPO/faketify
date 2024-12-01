@@ -3,13 +3,11 @@ import TrackDetails from './_components/TrackDetails'
 import MainContainer from '@/components/container/main-container'
 
 interface Params {
-    params: {
-        trackId: string
-    }
+    params: Promise<{ trackId: string }>
 }
 
-export default function page({ params }: Params) {
-    const { trackId } = params
+export default async function page({ params }: Params) {
+    const { trackId } = await params
     return (
         <MainContainer>
             <TrackDetails trackId={trackId} />

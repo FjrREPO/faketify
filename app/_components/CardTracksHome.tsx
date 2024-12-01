@@ -2,6 +2,7 @@ import MusicPlayButton from "@/components/music/music-play-button";
 import { Track } from "@prisma/client";
 import { motion } from "framer-motion";
 import { Play } from "lucide-react";
+import Image from "next/image";
 import { useState } from "react";
 
 export function CardTracksHome({ label, image, id, track }: { label: string; image: string, id: string, track: Track }) {
@@ -20,10 +21,12 @@ export function CardTracksHome({ label, image, id, track }: { label: string; ima
         >
             <div className="flex flex-col items-center gap-2">
                 <div className="relative">
-                    <img
+                    <Image
                         src={image || 'https://res.cloudinary.com/dutlw7bko/image/upload/v1718969701/faketify/placeholder-img_wbhjm1.png'}
                         className="rounded-lg w-[180px] h-[180px]"
                         alt="image"
+                        width={180}
+                        height={180}
                     />
                     <motion.div
                         className="absolute right-2 bottom-2"

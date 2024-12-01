@@ -3,6 +3,7 @@
 import { Playlist } from '@prisma/client'
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 import image from 'next/image';
 import React, { useState } from 'react'
 import { FaPlayCircle } from 'react-icons/fa';
@@ -24,10 +25,12 @@ export default function CategoryDetailsPlaylists({ savedId }: { savedId: string 
         >
             <div className="flex flex-col items-center gap-2">
                 <div className="relative">
-                    <img
+                    <Image
                         src={findPlaylistById?.playlist_images[0] || 'https://res.cloudinary.com/dutlw7bko/image/upload/v1718969701/faketify/placeholder-img_wbhjm1.png'}
                         className="rounded-lg w-[180px] h-[180px]"
                         alt="image"
+                        width={180}
+                        height={180}
                     />
                     <motion.div
                         className="absolute right-2 bottom-2"

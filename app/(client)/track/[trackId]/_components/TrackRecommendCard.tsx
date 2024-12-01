@@ -1,5 +1,6 @@
 import { Label } from '@/components/ui/label';
 import { Album, Artist, Track } from '@prisma/client';
+import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react'
 
@@ -18,7 +19,7 @@ export default function TrackRecommendCard({ tracksData, albumsData, artistsData
                 return (
                     <Link href={`/track/${track.track_id}`} key={track.track_id} className="grid grid-cols-3 hover:bg-foreground/20 rounded-lg p-2 cursor-pointer">
                         <div className="flex flex-row gap-3 place-content-start">
-                            <img src={findAlbumsByTrackId?.album_images[0]} alt="" className="w-10 rounded-sm" />
+                            <Image width={10} height={10} src={findAlbumsByTrackId?.album_images[0] || ""} alt="" className="w-10 rounded-sm" />
                             <div className="flex flex-col gap-1 justify-center">
                                 <Label className="capitalize hover:underline cursor-pointer">{track.track_name}</Label>
                                 <div className="flex flex-row whitespace-break-spaces text-textsecondary">

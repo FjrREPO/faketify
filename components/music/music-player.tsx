@@ -15,10 +15,11 @@ import { useMusicPlayer } from '../providers/music-provider';
 import { useQuery } from '@tanstack/react-query';
 import { AnimatePresence, motion } from "framer-motion";
 import { Label } from '../ui/label';
+import { Album, Artist } from '@prisma/client';
 
 export default function MusicPlayer() {
     const { currentTrack, isPlaying, playTrack, pauseTrack } = useMusicPlayer();
-    const audioPlayerRef = useRef<any>(null);
+    const audioPlayerRef = useRef<AudioPlayer>(null);
     const [isVisible, setIsVisible] = useState(false);
     const [currentParagraph, setCurrentParagraph] = useState(0);
 
@@ -51,12 +52,12 @@ export default function MusicPlayer() {
     const findArtist =
         artist.data &&
         currentTrack &&
-        artist.data.find((item: any) => currentTrack.track_artists_id.includes(item.artist_saved_id));
+        artist.data.find((item: Artist) => currentTrack.track_artists_id.includes(item.artist_saved_id ?? ''));
 
     const findAlbum =
         album.data &&
         currentTrack &&
-        album.data.find((item: any) => currentTrack.track_albums_id?.includes(item.album_saved_id));
+        album.data.find((item: Album) => currentTrack.track_albums_id?.includes(item.album_saved_id ?? ''));
 
     useEffect(() => {
         setIsVisible(!!currentTrack);
@@ -65,14 +66,14 @@ export default function MusicPlayer() {
 
     const handlePlay = () => {
         if (audioPlayerRef.current && currentTrack) {
-            audioPlayerRef.current.audio.current.play();
+            audioPlayerRef.current.audio.current?.play();
             playTrack();
         }
     };
 
     const handlePause = () => {
         if (audioPlayerRef.current) {
-            audioPlayerRef.current.audio.current.pause();
+            audioPlayerRef.current.audio.current?.pause();
             pauseTrack();
         }
     };

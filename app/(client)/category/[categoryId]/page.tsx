@@ -3,13 +3,11 @@ import CategoryDetails from './_components/CategoryDetails'
 import MainContainer from '@/components/container/main-container'
 
 interface Params {
-    params: {
-        categoryId: string
-    }
+    params: Promise<{ categoryId: string }>
 }
 
-export default function page({ params }: Params) {
-    const { categoryId } = params
+export default async function page({ params }: Params) {
+    const { categoryId } = await params
 
     return (
         <MainContainer>

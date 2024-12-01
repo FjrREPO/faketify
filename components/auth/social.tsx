@@ -7,8 +7,17 @@ import { useSearchParams } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
+import { Suspense } from "react";
 
-export const Social = () => {
+export const Social: React.FC = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SocialComponent />
+    </Suspense>
+  );
+};
+
+export const SocialComponent = () => {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl");
 

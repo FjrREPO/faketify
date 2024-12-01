@@ -23,7 +23,12 @@ interface Props {
 export default function CreateArtistDialog({ trigger }: Props) {
     const [open, setOpen] = useState(false);
     const [query, setQuery] = useState('');
-    const [data, setData] = useState<any>([]);
+    interface Artist {
+        id: string;
+        name: string;
+    }
+
+    const [data, setData] = useState<Artist[]>([]);
     const [selectedArtistId, setSelectedArtistId] = useState<string>('');
     const { token, loading, setLoading, error, setError } = useContext<SpotifyContextType>(SpotifyContext);
     const [pending, setPending] = useState(false);
@@ -78,8 +83,14 @@ export default function CreateArtistDialog({ trigger }: Props) {
             setError!(null);
 
             try {
-                const fetchedData: any = await getArtistsSpotify(query, token);
-                setData(fetchedData);
+                const fetchedData = await getArtistsSpotify(query, token);
+                setData(fetchedData as typeof data);
+                interface Artist {
+                    id: string;
+                    name: string;
+                }
+
+                setData(fetchedData as Artist[]);
             } catch (error) {
                 setError!('Failed to fetch artists');
             } finally {
@@ -94,7 +105,7 @@ export default function CreateArtistDialog({ trigger }: Props) {
                 setArtistName(artistData.name);
                 setArtistPopularity(artistData.popularity);
                 setArtistFollowers(artistData.followers.total);
-                setArtistImages(artistData.images.map((image: any) => image.url));
+                setArtistImages(artistData.images.map((image) => image.url));
                 setArtistGenres(artistData.genres);
                 setArtistSavedId(artistData.id);
 
@@ -102,7 +113,7 @@ export default function CreateArtistDialog({ trigger }: Props) {
                 setValue('artist_followers', artistData.followers.total);
                 setValue('artist_popularity', artistData.popularity);
                 setValue('artist_release_date', artistData.release_date);
-                setValue('artist_images', artistData.images.map((image: any) => image.url));
+                setValue('artist_images', artistData.images.map((image) => image.url));
                 setValue('artist_genres', artistData.genres);
                 setValue('artist_saved_id', artistData.id.toString());
             } catch (error) {
@@ -140,7 +151,7 @@ export default function CreateArtistDialog({ trigger }: Props) {
                         <Input
                             type="text"
                             value={query}
-                            onChange={(e: any) => setQuery(e.target.value)}
+                            onChange={(e) => setQuery(e.target.value)}
                             placeholder="Search for artist"
                         />
                     </div>
@@ -154,7 +165,7 @@ export default function CreateArtistDialog({ trigger }: Props) {
                                 />
                             </SelectTrigger>
                             <SelectContent>
-                                {data.map((artist: any) => (
+                                {data.map((artist) => (
                                     <SelectGroup
                                         key={artist.id}
                                         className='cursor-pointer'
@@ -225,8 +236,8 @@ export default function CreateArtistDialog({ trigger }: Props) {
                         <Label>Artist Images</Label>
                         <ImageUpload
                             value={artistImages}
-                            onChange={(e: any) => {
-                                setArtistImages(e.target.value);
+                            onChange={(e) => {
+                                setArtistImages(e);
                                 setValue('artist_images', e);
                             }}
                         />
