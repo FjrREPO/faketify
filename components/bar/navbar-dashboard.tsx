@@ -12,6 +12,11 @@ import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import UserButton from "../auth/user-button";
 
+type NavbarItemProps = {
+    label: string;
+    link: string;
+};
+
 const items = [
     { label: "Category", link: "/dashboard/category" },
     { label: "Artist", link: "/dashboard/music/artist" },
@@ -55,7 +60,7 @@ function MobileNavbar({ items }: { items: any }) {
                     >
                         <Logo />
                         <div className="flex flex-col gap-1 pt-4">
-                            {items.map((item: any) => (
+                            {items.map((item: NavbarItemProps) => (
                                 <NavbarItem
                                     key={item.label}
                                     link={item.link}

@@ -25,7 +25,7 @@ export default function CreateArtistDialog({ trigger }: Props) {
     const [query, setQuery] = useState('');
     const [data, setData] = useState<any>([]);
     const [selectedArtistId, setSelectedArtistId] = useState<string>('');
-    const { token, loading, setLoading, error, setError } = useContext<any>(SpotifyContext);
+    const { token, loading, setLoading, error, setError } = useContext<SpotifyContextType>(SpotifyContext);
     const [pending, setPending] = useState(false);
 
     const [artistName, setArtistName] = useState<string>('');
@@ -74,23 +74,23 @@ export default function CreateArtistDialog({ trigger }: Props) {
 
         const fetchSpotifyData = async () => {
             if (!token || query.length < 2) return;
-            setLoading(true);
-            setError(null);
+            setLoading!(true);
+            setError!(null);
 
             try {
                 const fetchedData: any = await getArtistsSpotify(query, token);
                 setData(fetchedData);
             } catch (error) {
-                setError('Failed to fetch artists');
+                setError!('Failed to fetch artists');
             } finally {
-                setLoading(false);
+                setLoading!(false);
             }
         };
 
         const fetchArtistDataById = async () => {
             if (!selectedArtistId) return
             try {
-                const artistData: any = await getArtistByIdSpotify(selectedArtistId, token);
+                const artistData = await getArtistByIdSpotify(selectedArtistId, token!) as unknown as ArtistData;
                 setArtistName(artistData.name);
                 setArtistPopularity(artistData.popularity);
                 setArtistFollowers(artistData.followers.total);
@@ -126,7 +126,7 @@ export default function CreateArtistDialog({ trigger }: Props) {
                 clearTimeout(timeoutId);
             }
         };
-    }, [query, token, setLoading, setError, selectedArtistId, pending]);
+    }, [query, token, setLoading, setError, selectedArtistId, pending, setValue]);
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>

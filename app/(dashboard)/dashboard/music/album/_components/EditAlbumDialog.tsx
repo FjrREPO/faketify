@@ -23,7 +23,7 @@ export default function EditAlbumDialog({ album, trigger }: Props) {
 
     const [albumName, setAlbumName] = useState<string>(album.album_name);
     const [albumPopularity, setAlbumPopularity] = useState<number>(album.album_popularity || 0);
-    const [albumReleaseDate, setAlbumReleaseDate] = useState<any>(album.album_release_date || '');
+    const [albumReleaseDate, setAlbumReleaseDate] = useState<string>(album.album_release_date || '');
     const [albumImages, setAlbumImages] = useState<string[]>(album.album_images || []);
     const [albumTracksId, setAlbumTracksId] = useState<string[]>(album.album_tracks_id || []);
     const [albumArtistsId, setAlbumArtistsId] = useState<string[]>(album.album_artists_id || []);
@@ -87,7 +87,7 @@ export default function EditAlbumDialog({ album, trigger }: Props) {
                         <div className='w-1/2'>
                             <Label>Album Release Date</Label>
                             <Input type="date" {...register('album_release_date')} value={albumReleaseDate} onChange={(e) => {
-                                setAlbumReleaseDate(parseInt(e.target.value));
+                                setAlbumReleaseDate(e.target.value);
                             }} />
                         </div>
                     </div>
@@ -95,9 +95,9 @@ export default function EditAlbumDialog({ album, trigger }: Props) {
                         <Label>Album Images</Label>
                         <ImageUpload
                             value={albumImages}
-                            onChange={(e: any) => {
-                                setAlbumImages(e.target.value);
-                                setValue('album_images', e);
+                            onChange={(images: string[]) => {
+                                setAlbumImages(images);
+                                setValue('album_images', images);
                             }}
                         />
                     </div>

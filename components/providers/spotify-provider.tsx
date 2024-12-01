@@ -3,7 +3,7 @@
 import { getTokenSpotify } from "@/lib/spotify/token/get-token-spotify";
 import { useState, useEffect, createContext } from "react";
 
-export const SpotifyContext = createContext({});
+export const SpotifyContext = createContext<SpotifyContextType>({});
 
 export const SpotifyProvider = ({ children }: { children: React.ReactNode }) => {
     const [token, setToken] = useState<string | null>(null);

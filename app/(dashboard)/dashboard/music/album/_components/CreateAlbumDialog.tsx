@@ -22,8 +22,14 @@ interface Props {
 export default function CreateAlbumDialog({ trigger }: Props) {
     const [open, setOpen] = useState(false);
     const [query, setQuery] = useState('');
-    const [data, setData] = useState<any>([]);
-    const { token, loading, setLoading, error, setError } = useContext<any>(SpotifyContext);
+    interface AlbumData {
+        id: string;
+        name: string;
+        artists: { name: string }[];
+    }
+    
+    const [data, setData] = useState<AlbumData[]>([]);
+    const { token, setLoading, setError } = useContext<SpotifyContextType>(SpotifyContext);
     const [pending, setPending] = useState(false);
 
     const [selectedAlbumId, setSelectedAlbumId] = useState<string>('');
@@ -68,37 +74,37 @@ export default function CreateAlbumDialog({ trigger }: Props) {
 
         const fetchSpotifyData = async () => {
             if (!token || query.length < 2) return;
-            setLoading(true);
-            setError(null);
+            setLoading!(true);
+            setError!(null);
 
             try {
-                const fetchedData: any = await getAlbumsSpotify(query, token);
+                const fetchedData = await getAlbumsSpotify(query, token);
                 setData(fetchedData);
             } catch (error) {
-                setError('Failed to fetch albums');
+                setError!('Failed to fetch albums');
             } finally {
-                setLoading(false);
+                setLoading!(false);
             }
         };
 
         const fetchArtistDataById = async () => {
             if (!selectedAlbumId) return
             try {
-                const artistData: any = await getAlbumByIdSpotify(selectedAlbumId, token);
+                const artistData = (await getAlbumByIdSpotify(selectedAlbumId, token!)) as unknown as ArtistData;
                 setAlbumName(artistData.name);
                 setAlbumPopularity(artistData.popularity);
                 setAlbumReleaseDate(artistData.release_date);
-                setAlbumImages(artistData.images.map((image: any) => image.url));
-                setAlbumTracksId(artistData.tracks.items.map((track: any) => track.id));
-                setAlbumArtistsId(artistData.artists.map((artist: any) => artist.id));
+                setAlbumImages(artistData.images.map((image) => image.url));
+                setAlbumTracksId(artistData.tracks.items.map((track) => track.id));
+                setAlbumArtistsId(artistData.artists.map((artist) => artist.id));
                 setAlbumSavedId(artistData.id);
 
                 setValue('album_name', artistData.name);
                 setValue('album_popularity', artistData.popularity);
                 setValue('album_release_date', artistData.release_date);
-                setValue('album_images', artistData.images.map((image: any) => image.url));
-                setValue('album_tracks_id', artistData.tracks.items.map((track: any) => track.id));
-                setValue('album_artists_id', artistData.artists.map((artist: any) => artist.id));
+                setValue('album_images', artistData.images.map((image) => image.url));
+                setValue('album_tracks_id', artistData.tracks.items.map((track) => track.id));
+                setValue('album_artists_id', artistData.artists.map((artist) => artist.id));
                 setValue('album_saved_id', artistData.id);
             } catch (error) {
                 console.error(error);
@@ -121,7 +127,7 @@ export default function CreateAlbumDialog({ trigger }: Props) {
                 clearTimeout(timeoutId);
             }
         };
-    }, [query, token, setLoading, setError, selectedAlbumId, pending]);
+    }, [query, token, setLoading, setError, selectedAlbumId, pending, setValue]);
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
@@ -135,7 +141,7 @@ export default function CreateAlbumDialog({ trigger }: Props) {
                         <Input
                             type="text"
                             value={query}
-                            onChange={(e: any) => setQuery(e.target.value)}
+                            onChange={(e) => setQuery(e.target.value)}
                             placeholder="Search for album"
                         />
                     </div>
@@ -149,7 +155,7 @@ export default function CreateAlbumDialog({ trigger }: Props) {
                                 />
                             </SelectTrigger>
                             <SelectContent>
-                                {data.map((album: any) => (
+                                {data.map((album) => (
                                     <SelectGroup
                                         key={album.id}
                                         className='cursor-pointer py-1'
@@ -157,7 +163,7 @@ export default function CreateAlbumDialog({ trigger }: Props) {
                                             setSelectedAlbumId(album.id);
                                         }}
                                     >
-                                        {album.name}{" - "}{album.artists.map((artist: any) => artist.name).join(', ')}
+                                        {album.name}{" - "}{album.artists.map((artist) => artist.name).join(', ')}
                                     </SelectGroup>
                                 ))}
                             </SelectContent>
@@ -191,8 +197,8 @@ export default function CreateAlbumDialog({ trigger }: Props) {
                         <Label>Album Images</Label>
                         <ImageUpload
                             value={albumImages}
-                            onChange={(e: any) => {
-                                setAlbumImages(e.target.value);
+                            onChange={(e) => {
+                                setAlbumImages(e);
                                 setValue('album_images', e);
                             }}
                         />

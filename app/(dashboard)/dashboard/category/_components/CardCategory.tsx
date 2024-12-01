@@ -95,7 +95,7 @@ const CategoryList = React.memo(function CategoryList({ category }: { category: 
                 <Separator />
                 {category.category_type === "artists" ? (
                     <div className="flex flex-row flex-wrap gap-4 p-4">
-                        {category.category_artists_saved_id.map((cat: any) => {
+                        {category.category_artists_saved_id.map((cat) => {
                             const findArtistsSaved = artists?.find(artist => cat.includes(artist.artist_saved_id ?? ''));
                             return (
                             <CardCategory key={cat} label={findArtistsSaved && findArtistsSaved.artist_name ? findArtistsSaved.artist_name : ""} image={findArtistsSaved && findArtistsSaved.artist_images[0] ? findArtistsSaved.artist_images[0] : ""} />
@@ -103,7 +103,7 @@ const CategoryList = React.memo(function CategoryList({ category }: { category: 
                     </div>
                 ) : findArtists ? (
                     <div className="flex flex-row flex-wrap gap-4 p-4">
-                        {category.category_artists_id.map((cat: any) => {
+                        {category.category_artists_id.map((cat) => {
                             const findArtists = artists?.find(artist => cat.includes(artist.artist_id ?? ''));
                             return (
                                 <CardCategory key={cat} label={findArtists && findArtists.artist_name ? findArtists.artist_name : ""} image={findArtists && findArtists.artist_images[0] ? findArtists.artist_images[0] : ""} />
@@ -115,7 +115,7 @@ const CategoryList = React.memo(function CategoryList({ category }: { category: 
                 )}
                 {category.category_type === "albums" ? (
                     <div className="flex flex-row flex-wrap gap-4 p-4">
-                        {category.category_albums_saved_id.map((cat: any) => {
+                        {category.category_albums_saved_id.map((cat) => {
                             const findAlbumsSaved = albums?.find(album => cat.includes(album.album_saved_id ?? ''));
                             return (
                                 <CardCategory key={cat} label={findAlbumsSaved && findAlbumsSaved.album_name ? findAlbumsSaved.album_name : ""} image={findAlbumsSaved && findAlbumsSaved.album_images[0] ? findAlbumsSaved.album_images[0] : ""} />
@@ -124,7 +124,7 @@ const CategoryList = React.memo(function CategoryList({ category }: { category: 
                     </div>
                 ) : findAlbums ? (
                     <div className="flex flex-row flex-wrap gap-4 p-4">
-                        {category.category_albums_id.map((cat: any) => {
+                        {category.category_albums_id.map((cat) => {
                             const findAlbums = albums?.find(album => cat.includes(album.album_id ?? ''));
                             return (
                                 <CardCategory key={cat} label={findAlbums && findAlbums.album_name ? findAlbums.album_name : ""} image={findAlbums && findAlbums.album_images[0] ? findAlbums.album_images[0] : ""} />
@@ -136,7 +136,7 @@ const CategoryList = React.memo(function CategoryList({ category }: { category: 
                 )}
                 {category.category_type === "tracks" ? (
                     <div className="flex flex-row flex-wrap gap-4 p-4">
-                        {category.category_tracks_saved_id.map((cat: any) => {
+                        {category.category_tracks_saved_id.map((cat) => {
                             const findTracksSaved = tracks?.find(track => cat.includes(track.track_saved_id ?? ''));
                             const findAlbumsImage = albums?.find(album => findTracksSaved?.track_saved_id && album.album_tracks_id.includes(findTracksSaved?.track_saved_id ?? ''));
 
@@ -147,7 +147,7 @@ const CategoryList = React.memo(function CategoryList({ category }: { category: 
                     </div>
                 ) : findTracks ? (
                     <div className="flex flex-row flex-wrap gap-4 p-4">
-                        {category.category_tracks_id.map((cat: any) => {
+                        {category.category_tracks_id.map((cat) => {
                             const findTracks = tracks?.find(track => cat.includes(track.track_id ?? ''));
                             const findAlbumsImage = albums?.find(album => findTracks?.track_saved_id && album.album_tracks_id.includes(findTracks?.track_saved_id ?? ''));
                             return (
@@ -160,7 +160,7 @@ const CategoryList = React.memo(function CategoryList({ category }: { category: 
                 )}
                 {category.category_type === "playlists" ? (
                     <div className="flex flex-row flex-wrap gap-4 p-4">
-                        {category.category_playlists_saved_id.map((cat: any) => {
+                        {category.category_playlists_saved_id.map((cat) => {
                             const findPlaylistsSaved = playlists?.find(playlist => cat.includes(playlist.playlist_saved_id ?? ''));
                             console.log(findPlaylistsSaved)
                             return (
@@ -170,7 +170,7 @@ const CategoryList = React.memo(function CategoryList({ category }: { category: 
                     </div>
                 ) : findPlaylists ? (
                     <div className="flex flex-row flex-wrap gap-4 p-4">
-                        {category.category_playlists_id.map((cat: any) => {
+                        {category.category_playlists_id.map((cat) => {
                             const findPlaylists = playlists?.find(playlist => cat.includes(playlist.playlist_id ?? ''));
                             return (
                                 <CardCategory key={cat} label={findPlaylists && findPlaylists.playlist_name ? findPlaylists.playlist_name : ""} image={findPlaylists && findPlaylists.playlist_images[0] ? findPlaylists.playlist_images[0] : ""} />

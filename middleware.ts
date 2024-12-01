@@ -10,9 +10,11 @@ import {
 
 const { auth } = NextAuth(authConfig);
 
-interface AuthRequest {
-  nextUrl: URL;
-  auth?: any;
+import { NextRequest } from "next/server";
+import { Session } from "next-auth";
+
+interface AuthRequest extends NextRequest {
+  auth?: Session | null;
 }
 
 export default auth((req: AuthRequest): void | Response | Promise<void | Response> => {
