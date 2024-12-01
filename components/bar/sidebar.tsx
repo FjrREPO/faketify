@@ -61,7 +61,7 @@ export default function SidebarComponent() {
                                 </CardHeader>
                                 <CardContent>
                                     <div className='flex flex-col gap-5'>
-                                        <Label>It's easy, We'll help you</Label>
+                                        <Label>It&apos;s easy, We&apos;ll help you</Label>
                                         <Button className='w-fit rounded-full'>Create Playlist</Button>
                                     </div>
                                 </CardContent>
@@ -72,7 +72,7 @@ export default function SidebarComponent() {
                                 </CardHeader>
                                 <CardContent>
                                     <div className='flex flex-col gap-5'>
-                                        <Label>We'll keep you update on new music</Label>
+                                        <Label>We&apos;ll keep you update on new music</Label>
                                         <Button className='w-fit rounded-full'>Explore</Button>
                                     </div>
                                 </CardContent>

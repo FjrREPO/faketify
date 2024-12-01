@@ -3,7 +3,7 @@
 import * as z from "zod";
 import bcrypt from "bcryptjs";
 
-import { update } from "@/auth";
+// import { update } from "@/auth";
 import prisma from "@/lib/prisma/prisma";
 import { SettingsSchema } from "@/schemas/auth/user";
 import { getUserByEmail, getUserById } from "@/data/user";
@@ -18,6 +18,9 @@ export const settings = async (values: z.infer<typeof SettingsSchema>) => {
     return { error: "Unauthorized" };
   }
 
+  if (!user.id) {
+    return { error: "User ID is undefined" };
+  }
   const prismaUser = await getUserById(user.id);
 
   if (!prismaUser) {
@@ -32,13 +35,13 @@ export const settings = async (values: z.infer<typeof SettingsSchema>) => {
   }
 
   if (values.email && values.email !== user.email) {
-    const existingUser = await getUserByEmail(values.email);
+    const existingUser = typeof values.email === 'string' ? await getUserByEmail(values.email) : null;
 
     if (existingUser && existingUser.id !== user.id) {
       return { error: "Email already in use!" };
     }
 
-    const verificationToken = await generateVerificationToken(values.email);
+    const verificationToken = await generateVerificationToken(values.email as string);
     await sendVerificationEmail(
       verificationToken.email,
       verificationToken.token
@@ -49,7 +52,7 @@ export const settings = async (values: z.infer<typeof SettingsSchema>) => {
 
   if (values.password && values.newPassword && prismaUser.password) {
     const passwordsMatch = await bcrypt.compare(
-      values.password,
+      values.password as string,
       prismaUser.password
     );
 
@@ -57,7 +60,7 @@ export const settings = async (values: z.infer<typeof SettingsSchema>) => {
       return { error: "Incorrect password!" };
     }
 
-    const hashedPassword = await bcrypt.hash(values.newPassword, 10);
+    const hashedPassword = await bcrypt.hash(values.newPassword as string, 10);
     values.password = hashedPassword;
     values.newPassword = undefined;
   }
@@ -69,14 +72,14 @@ export const settings = async (values: z.infer<typeof SettingsSchema>) => {
     },
   });
 
-  update({
-    user: {
-      name: updatedUser.name,
-      email: updatedUser.email,
-      isTwoFactorEnabled: updatedUser.isTwoFactorEnabled,
-      role: updatedUser.role,
-    },
-  });
+  // update({
+  //   user: {
+  //     name: updatedUser.name,
+  //     email: updatedUser.email,
+  //     isTwoFactorEnabled: updatedUser.isTwoFactorEnabled,
+  //     role: updatedUser.role,
+  //   },
+  // });
 
   return { success: "Settings Updated!" };
 };
