@@ -18,7 +18,6 @@ import { FaPlayCircle } from "react-icons/fa";
 import { useMusicPlayer } from "@/components/providers/music-provider";
 
 export default function CardTracks() {
-    const [selectedTrack, setSelectedTrack] = useState<Track | null>(null);
     const { setCurrentTrack } = useMusicPlayer();
 
     const tracks = useQuery({

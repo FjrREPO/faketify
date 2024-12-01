@@ -11,17 +11,13 @@ export async function GET(request: Request) {
 
     const url = `https://api.lyrics.ovh/v1/${artist}/${title}`;
 
-    try {
-        const response = await fetch(url);
-
-        if (!response.ok) {
-            throw new Error('Failed to fetch lyrics');
-        }
-
-        const data = await response.json();
-
-        return NextResponse.json(data);
-    } catch (error) {
-        return NextResponse.json({ error: 'Failed to fetch lyrics' }, { status: 500 });
+    const response = await fetch(url);
+    
+    if (!response.ok) {
+        return ''
     }
+    
+    const data = await response.json();
+
+    return NextResponse.json(data);
 }

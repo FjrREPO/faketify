@@ -40,7 +40,7 @@ export default function MainContainer({ children }: { children: React.ReactNode 
                     </div>
                 </div>
                 <div className="rightside w-full h-full relative">
-                    <div ref={containerRef} className="z-20 w-full absolute overflow-y-auto h-full rounded-lg pb-10 bg-gradient-to-b from-backgroundsecondary to-black">
+                    <div ref={containerRef} className="z-20 w-full absolute overflow-y-auto h-full rounded-lg pb-10">
                         <header
                             id="navbar"
                             className={`sticky top-0 right-0 w-full pl-5 pr-2 py-3 z-40 ${isScrolled ? 'bg-card' : 'bg-transparent'} transition-colors duration-500 ease-in-out`}

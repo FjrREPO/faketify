@@ -37,7 +37,7 @@ function DesktopNavbar() {
   }
 
   return (
-    <div className="flex flex-col w-full px-5 py-3 gap-5">
+    <div className="flex flex-col w-full px-1 gap-5">
       <div className='flex flex-row items-center justify-between'>
         <div className='flex flex-row items-center gap-2'>
           <Button onClick={handleClickBack} className={`w-fit h-fit rounded-full p-0 cursor-pointer ${canGoBack ? 'text-white' : 'text-textsecondary hover:text-textsecondary cursor-not-allowed'}`} variant={'ghost'}>

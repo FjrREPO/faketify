@@ -47,14 +47,7 @@ export default function CreateAlbumDialog({ trigger }: Props) {
 
         try {
             const formattedData = {
-                ...data,
-                albumName: albumName,
-                albumPopularity: albumPopularity,
-                albumReleaseDate: albumReleaseDate,
-                albumImages: albumImages,
-                albumTracksId: albumTracksId,
-                albumArtistsId: albumArtistsId,
-                albumSavedId: albumSavedId
+                ...data
             };
             await axios.post('/api/music/album', formattedData);
             toast.success('Album created successfully!');
@@ -159,12 +152,12 @@ export default function CreateAlbumDialog({ trigger }: Props) {
                                 {data.map((album: any) => (
                                     <SelectGroup
                                         key={album.id}
-                                        className='cursor-pointer'
+                                        className='cursor-pointer py-1'
                                         onClick={() => {
                                             setSelectedAlbumId(album.id);
                                         }}
                                     >
-                                        {album.name}
+                                        {album.name}{" - "}{album.artists.map((artist: any) => artist.name).join(', ')}
                                     </SelectGroup>
                                 ))}
                             </SelectContent>

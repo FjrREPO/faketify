@@ -19,7 +19,7 @@ const config = {
     },
     extend: {
       fontFamily: {
-        'circular': ['CircularSpotifyText', 'sans-serif'], // Use the custom font in Tailwind
+        'circular': ['CircularSpotifyText', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -29,6 +29,7 @@ const config = {
         foreground: "hsl(var(--foreground))",
         backgroundsecondary: "hsl(var(--background-secondary))",
         textsecondary: "hsl(var(--text-secondary))",
+        backgroundSpotify: "hsl(var(--background-spotify))",
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",

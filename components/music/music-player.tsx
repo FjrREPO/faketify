@@ -10,10 +10,11 @@ import { TbSwitch3 } from 'react-icons/tb';
 import { LiaMicrophoneAltSolid } from "react-icons/lia";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
 import { Button } from '../ui/button';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronDown, ChevronLeft, ChevronRight, ChevronUp } from 'lucide-react';
 import { useMusicPlayer } from '../providers/music-provider';
 import { useQuery } from '@tanstack/react-query';
 import { AnimatePresence, motion } from "framer-motion";
+import { Label } from '../ui/label';
 
 export default function MusicPlayer() {
     const { currentTrack, isPlaying, playTrack, pauseTrack } = useMusicPlayer();
@@ -27,6 +28,14 @@ export default function MusicPlayer() {
 
     const handlePreviousClick = () => {
         setCurrentParagraph(currentParagraph - 1);
+    };
+
+    const handleOpen = () => {
+        setIsVisible(true);
+    };
+
+    const handleClose = () => {
+        setIsVisible(false);
     };
 
     const artist = useQuery({
@@ -51,7 +60,7 @@ export default function MusicPlayer() {
 
     useEffect(() => {
         setIsVisible(!!currentTrack);
-        setCurrentParagraph(0); // Reset paragraph index when track changes
+        setCurrentParagraph(0);
     }, [currentTrack]);
 
     const handlePlay = () => {
@@ -71,13 +80,19 @@ export default function MusicPlayer() {
     const lyric = useQuery({
         queryKey: ['lyric', currentTrack?.track_name, findArtist?.artist_name],
         queryFn: async () => {
-            const response = await fetch(`/api/music/lyric?title=${encodeURIComponent(currentTrack?.track_name || '')}&artist=${encodeURIComponent(findArtist?.artist_name || '')}`);
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
+            if (findArtist && currentTrack) {
+                const response = await fetch(`/api/music/lyric?title=${encodeURIComponent(currentTrack.track_name)}&artist=${encodeURIComponent(findArtist.artist_name)}`);
+                if (!response.ok) {
+                    return ''
+                }
+                const data = await response.json();
+                return data.lyrics;
+            } else {
+                return '';
             }
-            const data = await response.json();
-            return data.lyrics;
-        }
+        },
+        staleTime: Infinity,
+        refetchInterval: false,
     });
 
     return (
@@ -156,7 +171,7 @@ export default function MusicPlayer() {
                                                         {currentTrack && currentTrack.track_name}
                                                     </DialogTitle>
                                                 </DialogHeader>
-                                                {lyric.data && (
+                                                {lyric.data ? (
                                                     <>
                                                         <motion.div
                                                             key={currentParagraph}
@@ -179,6 +194,11 @@ export default function MusicPlayer() {
                                                             )}
                                                         </div>
                                                     </>
+                                                ) : (
+                                                    <>
+                                                        <Label className='text-center'>Lyric not found</Label>
+                                                        <div></div>
+                                                    </>
                                                 )}
                                             </DialogContent>
                                         </Dialog>
@@ -189,6 +209,19 @@ export default function MusicPlayer() {
                     </motion.div>
                 )}
             </AnimatePresence>
+            {currentTrack && (
+                <div className='absolute bottom-1 right-2 z-50 h-fit w-fit'>
+                    {isVisible ? (
+                        <Button className='p-0 w-fit h-fit px-2 hover:bg-foreground/10' variant={"ghost"} onClick={handleClose}>
+                            <ChevronDown />
+                        </Button>
+                    ) : (
+                        <Button className='p-0 w-fit h-fit px-2 hover:bg-foreground/10' variant={"ghost"} onClick={handleOpen}>
+                            <ChevronUp />
+                        </Button>
+                    )}
+                </div>
+            )}
         </>
     );
 }

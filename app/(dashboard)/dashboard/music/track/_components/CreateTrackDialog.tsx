@@ -35,7 +35,6 @@ export default function CreateTrackDialog({ trigger }: Props) {
     const [trackArtistsId, setTrackArtistsId] = useState<string[]>([]);
     const [trackSavedId, setTrackSavedId] = useState<string>('');
 
-
     const { register, handleSubmit, setValue, formState: { errors }, reset } = useForm<FieldValues>({
         defaultValues: {},
     });
@@ -157,7 +156,7 @@ export default function CreateTrackDialog({ trigger }: Props) {
                                             setSelectedTrackId(track.id);
                                         }}
                                     >
-                                        {track.name}
+                                        {track.name}{" - "}{track.artists.map((artist: any) => artist.name).join(', ')}
                                     </SelectGroup>
                                 ))}
                             </SelectContent>
