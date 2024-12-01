@@ -59,17 +59,19 @@ function MobileNavbar({ items }: { items: NavbarItemProps[] }) {
                         className="w-[400px] sm:w-[540px]"
                         side={"left"}
                     >
-                        <Logo />
-                        <div className="flex flex-col gap-1 pt-4">
-                            {items.map((item: NavbarItemProps) => (
-                                <NavbarItem
-                                    key={item.label}
-                                    link={item.link}
-                                    label={item.label}
-                                    clickCallback={() => setIsOpen(false)}
-                                />
-                            ))}
-                        </div>
+                        <>
+                            <Logo />
+                            <div className="flex flex-col gap-1 pt-4">
+                                {items.map((item: NavbarItemProps) => (
+                                    <NavbarItem
+                                        key={item.label}
+                                        link={item.link}
+                                        label={item.label}
+                                        clickCallback={() => setIsOpen(false)}
+                                    />
+                                ))}
+                            </div>
+                        </>
                     </SheetContent>
                 </Sheet>
                 <div className="flex h-[80px] min-h-[60px] items-center gap-x-4">
@@ -96,14 +98,14 @@ function DesktopNavbar({ items }: { items: NavbarItemProps[] }) {
                                 (
                                     <DropdownMenu key={item.label}>
                                         <DropdownMenuTrigger asChild>
-                                        <div className="relative flex items-center">
-                                            <Button
-                                                variant={"ghost"}
-                                                className="w-full gap-2 justify-end text-lg text-muted-foreground hover:text-foreground"
-                                            >
-                                                {item.label}
-                                            </Button>
-                                        </div>
+                                            <div className="relative flex items-center">
+                                                <Button
+                                                    variant={"ghost"}
+                                                    className="w-full gap-2 justify-end text-lg text-muted-foreground hover:text-foreground"
+                                                >
+                                                    {item.label}
+                                                </Button>
+                                            </div>
                                         </DropdownMenuTrigger>
                                         <DropdownMenuContent className="w-full">
                                             <DropdownMenuItem>
