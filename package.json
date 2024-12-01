@@ -22,7 +22,6 @@
     "@vibrant/core": "^3.2.1-alpha.1",
     "axios": "^1.7.2",
     "bcryptjs": "^2.4.3",
-    "canvas": "^2.11.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "fast-average-color": "^9.4.0",
